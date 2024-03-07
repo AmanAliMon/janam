@@ -1,0 +1,189 @@
+#include <iostream>
+#include <chrono>
+#include <iomanip>
+#include <sstream>
+
+class Date {
+private:
+    std::chrono::system_clock::time_point currentTime;
+
+public:
+    // Constructor initializes the current time
+    Date() : currentTime(std::chrono::system_clock::now()) {}
+
+    // Set the day of the month (1-31)
+    void setDate(int day) {
+        // Get the current time as a time_t object
+        auto timeT = std::chrono::system_clock::to_time_t(currentTime);
+        // Convert time_t to tm structure
+        std::tm* timeInfo = std::localtime(&timeT);
+        // Update the day of the month
+        timeInfo->tm_mday = day;
+        // Convert tm structure back to time_t and assign it to currentTime
+        currentTime = std::chrono::system_clock::from_time_t(std::mktime(timeInfo));
+    }
+
+    // Set the full year (e.g., 2023)
+    void setFullYear(int year) {
+        auto timeT = std::chrono::system_clock::to_time_t(currentTime);
+        std::tm* timeInfo = std::localtime(&timeT);
+        // Update the year (years since 1900)
+        timeInfo->tm_year = year - 1900;
+        currentTime = std::chrono::system_clock::from_time_t(std::mktime(timeInfo));
+    }
+
+    // Set the hours (0-23)
+    void setHours(int hours) {
+        auto timeT = std::chrono::system_clock::to_time_t(currentTime);
+        std::tm* timeInfo = std::localtime(&timeT);
+        // Update the hours
+        timeInfo->tm_hour = hours;
+        currentTime = std::chrono::system_clock::from_time_t(std::mktime(timeInfo));
+    }
+
+    // Set the minutes (0-59)
+    void setMinutes(int minutes) {
+        auto timeT = std::chrono::system_clock::to_time_t(currentTime);
+        std::tm* timeInfo = std::localtime(&timeT);
+        // Update the minutes
+        timeInfo->tm_min = minutes;
+        currentTime = std::chrono::system_clock::from_time_t(std::mktime(timeInfo));
+    }
+
+    // Set the month (0-11)
+    void setMonth(int month) {
+        auto timeT = std::chrono::system_clock::to_time_t(currentTime);
+        std::tm* timeInfo = std::localtime(&timeT);
+        // Update the month (0-based index)
+        timeInfo->tm_mon = month;
+        currentTime = std::chrono::system_clock::from_time_t(std::mktime(timeInfo));
+    }
+
+    // Set the seconds (0-59)
+    void setSeconds(int seconds) {
+        auto timeT = std::chrono::system_clock::to_time_t(currentTime);
+        std::tm* timeInfo = std::localtime(&timeT);
+        // Update the seconds
+        timeInfo->tm_sec = seconds;
+        currentTime = std::chrono::system_clock::from_time_t(std::mktime(timeInfo));
+    }
+
+    // Set the time using milliseconds since epoch
+    void setTime(long long milliseconds) {
+        currentTime = std::chrono::system_clock::time_point(std::chrono::milliseconds(milliseconds));
+    }
+
+    // Convert the current date and time to an ISO 8601 formatted string (e.g., "2023-10-08T15:30:45Z")
+    std::string toISOString() {
+        auto timeT = std::chrono::system_clock::to_time_t(currentTime);
+        std::tm* timeInfo = std::gmtime(&timeT);
+        std::ostringstream oss;
+        oss << std::put_time(timeInfo, "%Y-%m-%dT%H:%M:%SZ");
+        return oss.str();
+    }
+
+    // Convert the current date and time to a JSON-formatted string (same as ISO 8601)
+    std::string toJSON() {
+        return toISOString();
+    }
+
+    // Get the current time in milliseconds since epoch
+    long long getTime() {
+        auto duration = currentTime.time_since_epoch();
+        return std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+    }
+
+int getMinutes() {
+    auto duration = currentTime.time_since_epoch();
+    return std::chrono::duration_cast<std::chrono::minutes>(duration).count() % 60;
+}
+    // Get the full 4-digit year (e.g., 2023)
+    int getFullYear() {
+        auto timeT = std::chrono::system_clock::to_time_t(currentTime);
+        std::tm* timeInfo = std::localtime(&timeT);
+        return timeInfo->tm_year + 1900;
+    }
+
+    // Get the month (0-11)
+    int getMonth() {
+        auto timeT = std::chrono::system_clock::to_time_t(currentTime);
+        std::tm* timeInfo = std::localtime(&timeT);
+        return timeInfo->tm_mon;
+    }
+
+    // Get the day of the month (1-31)
+    int getDate() {
+        auto timeT = std::chrono::system_clock::to_time_t(currentTime);
+        std::tm* timeInfo = std::localtime(&timeT);
+        return timeInfo->tm_mday;
+    }
+
+    // Get the seconds (0-59)
+    int getSeconds() {
+        auto duration = currentTime.time_since_epoch();
+        return std::chrono::duration_cast<std::chrono::seconds>(duration).count() % 60;
+    }
+
+    // Get the milliseconds (0-999)
+    int getMilliseconds() {
+        auto duration = currentTime.time_since_epoch();
+        return std::chrono::duration_cast<std::chrono::milliseconds>(duration).count() % 1000;
+    }
+
+    // Get the day of the week (0-6, 0 = Sunday, 1 = Monday, ...)
+    int getDay() {
+        auto timeT = std::chrono::system_clock::to_time_t(currentTime);
+        std::tm* timeInfo = std::localtime(&timeT);
+        return timeInfo->tm_wday;
+    }
+
+    // Get the hours (0-23)
+    int getHours() {
+        auto duration = currentTime.time_since_epoch();
+        return std::chrono::duration_cast<std::chrono::hours>(duration).count() % 24;
+    }
+
+    // ... (Implement more methods as needed)
+
+    // Convert the current time to a UTC-formatted string (e.g., "Sun, 08 Oct 2023 15:30:45 GMT")
+    std::string toUTCString() {
+        auto timeT = std::chrono::system_clock::to_time_t(currentTime);
+        std::tm* timeInfo = std::gmtime(&timeT);
+        char buffer[80];
+        strftime(buffer, sizeof(buffer), "%a, %d %b %Y %H:%M:%S GMT", timeInfo);
+        return buffer;
+    }
+
+    // ValueOf method returns the current time in milliseconds since epoch
+    long long valueOf() {
+        auto duration = currentTime.time_since_epoch();
+        return std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+    }
+};
+
+// int main() {
+//     Date myDate; // Create a Date object
+
+//     // Calling various methods and printing the results
+//     std::cout << "Current Date and Time: " << myDate.toUTCString() << std::endl;
+//     std::cout << "Year: " << myDate.getFullYear() << std::endl;
+//     std::cout << "Month: " << myDate.getMonth() << std::endl;
+//     std::cout << "Day: " << myDate.getDate() << std::endl;
+//     std::cout << "Day of the Week: " << myDate.getDay() << std::endl;
+//     std::cout << "Hours: " << myDate.getHours() << std::endl;
+//     std::cout << "Minutes: " << myDate.getMinutes() << std::endl;
+//     std::cout << "Seconds: " << myDate.getSeconds() << std::endl;
+//     std::cout << "Milliseconds: " << myDate.getMilliseconds() << std::endl;
+
+//     // Example of setting the date and time
+//     myDate.setFullYear(2023);
+//     myDate.setMonth(9); // Note: Months are 0-based in C++
+//     myDate.setDate(8);
+//     myDate.setHours(15);
+//     myDate.setMinutes(30);
+//     myDate.setSeconds(45);
+    
+//     std::cout << "Updated Date and Time: " << myDate.toUTCString() << std::endl;
+
+//     return 0;
+// }

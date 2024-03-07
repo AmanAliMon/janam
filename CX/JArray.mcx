@@ -1,0 +1,106 @@
+#include "lib_x/import/match.mcx"
+#include <iostream>
+#include <vector>
+
+class JArray {
+private:
+    std::vector<JString> data;
+
+public:
+    JArray() {}
+    JArray(size_t size) : data(size) {}
+    JArray(JString str) : data(str) {}
+    JArray(std::initializer_list<JString> values) : data(values) {}
+    
+    JString& operator[](size_t index) {
+        return data[index];
+    }
+
+    JString at(size_t index) const {
+        if (index >= 0 && index < size()) {
+            return data[index];
+        }
+        throw std::out_of_range("Index out of range");
+    }
+    void forEach(function<void()> callback){
+        for(const auto JString &element : data)
+        {
+            callback(element);
+        }
+    }
+
+    JArray concat(const JArray& other) const {
+        JArray result;
+        result.data = data;
+        result.data.insert(result.data.end(), other.data.begin(), other.data.end());
+        return result;
+    }
+
+     JString at(size_t index) {
+        if (index >= 0 && index < size()) {
+            return data[index];
+        }
+        throw std::out_of_range("Index out of range");
+    }
+
+    JArray concat(const JArray& other) {
+        JArray result;
+        result.data = data;
+        result.data.insert(result.data.end(), other.data.begin(), other.data.end());
+        return result;
+    }
+
+    JArray copyWithin(size_t target, size_t start, size_t end) {
+        if (start >= size() || end > size() || target >= size()) {
+            throw std::out_of_range("Index out of range");
+        }
+
+        JArray result(*this);
+
+        size_t count = end - start;
+        size_t remaining = size() - target;
+
+        if (count > remaining) {
+            count = remaining;
+        }
+
+        for (size_t i = 0; i < count; ++i) {
+            result[target + i] = data[start + i];
+        }
+
+        return result;
+    }
+
+    size_t size() const {
+        return data.size();
+    }
+    
+    JArray operator+(const JArray& other) const {
+        JArray result(size());
+        for (size_t i = 0; i < size(); ++i) {
+            result[i] = data[i] + other[i];
+        }
+        return result;
+    }
+};
+/*
+int main() {
+    JArray arr1 = {1.0, 2.0, 3.0};
+    JArray arr2 = {0.5, 1.0, 1.5};
+
+    JArray concatenated = arr1.concat(arr2);
+    std::cout << "Concatenated array: ";
+    for (size_t i = 0; i < concatenated.size(); ++i) {
+        std::cout << concatenated[i] << " ";
+    }
+    std::cout << std::endl;
+
+    JArray copiedWithin = arr1.copyWithin(1, 0, 2);
+    std::cout << "Copied within array: ";
+    for (size_t i = 0; i < copiedWithin.size(); ++i) {
+        std::cout << copiedWithin[i] << " ";
+    }
+    std::cout << std::endl;
+
+    return 0;
+}*/

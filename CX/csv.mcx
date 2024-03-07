@@ -1,0 +1,217 @@
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <string>
+#include <algorithm>
+using namespace std;
+typedef vector<vector<string>> csvRow;
+typedef vector<string> csvCol;
+typedef pair<size_t, size_t> csvDimension;
+class CSVLibrary
+{
+public:
+    CSVLibrary() {}
+    bool exportData(const string &fileName, const csvRow &data)
+    {
+        ofstream outFile(fileName);
+        if (!outFile.is_open())
+        {
+            return false;
+        }
+
+        for (const vector<string> &row : data)
+        {
+            for (size_t i = 0; i < row.size(); ++i)
+            {
+                outFile << row[i];
+                if (i < row.size() - 1)
+                {
+                    outFile << ",";
+                }
+            }
+            outFile << endl;
+        }
+        outFile.close();
+        return true;
+        
+    }
+
+    csvRow importData(const string &fileName)
+    {
+        csvRow data;
+        ifstream inFile(fileName);
+        if (!inFile.is_open())
+        {
+            cerr << "Failed to open file: " << fileName << endl;
+            return data;
+        }
+
+        string line;
+        while (getline(inFile, line))
+        {
+            vector<string> row;
+            stringstream ss(line);
+            string cell;
+
+            while (getline(ss, cell, ','))
+            {
+                row.push_back(cell);
+            }
+
+            data.push_back(row);
+        }
+
+        inFile.close();
+        return data;
+    }
+
+    // Append data to an existing CSV file.
+    bool appendToCSV(const string &fileName, const csvRow &data)
+    {
+        ofstream outFile(fileName, ios::app);
+        if (!outFile.is_open())
+        {
+            cerr << "Failed to open file: " << fileName << endl;
+            return false;
+        }
+
+        for (const vector<string> &row : data)
+        {
+            for (size_t i = 0; i < row.size(); ++i)
+            {
+                outFile << row[i];
+                if (i < row.size() - 1)
+                {
+                    outFile << ",";
+                }
+            }
+            outFile << endl;
+        }
+
+        outFile.close();
+        return true;
+    }
+
+    // Get the number of rows and columns in a CSV file.
+    csvDimension getCSVDimensions(const string &fileName)
+    {
+        csvRow data = importData(fileName);
+        size_t numRows = data.size();
+        size_t numCols = (numRows > 0) ? data[0].size() : 0;
+        return make_pair(numRows, numCols);
+    }
+
+    bool updateCol(const string &fileName, const string &columnName, const vector<string> &newValues)
+    {
+        csvRow data = importData(fileName);
+        if (data.empty())
+        {
+            cerr << "CSV file is empty or does not exist: " << fileName << endl;
+            return false;
+        }
+
+        // Find the index of the specified column
+        size_t columnIndex = findColumnIndex(data, columnName);
+        if (columnIndex == string::npos)
+        {
+            cerr << "Column not found: " << columnName << endl;
+            return false;
+        }
+
+        // Ensure the number of new values matches the number of rows in the CSV
+        if (newValues.size() != data.size())
+        {
+    clog<< newValues.size() << data.size();
+            cerr << "Number of new values does not match the number of columns in the CSV." << endl;
+            return false;
+        }
+
+        // Replace the column data with new values
+        for (size_t i = 0; i < data.size(); ++i)
+        {
+            data[i][columnIndex] = newValues[i];
+        }
+
+        // Write the updated data back to the CSV file
+        return exportData(fileName, data);
+    }
+
+    // Sort CSV data by a specific column.
+    bool colView(const string &fileName, const string &columnName)
+    {
+        csvRow data = importData(fileName);
+        if (data.empty())
+        {
+            cerr << "CSV file is empty or does not exist: " << fileName << endl;
+            return false;
+        }
+
+        // Find the index of the specified column
+        size_t columnIndex = findColumnIndex(data, columnName);
+        if (columnIndex == string::npos)
+        {
+            cerr << "Column not found: " << columnName << endl;
+            return false;
+        }
+
+        // Sort the data based on the specified column
+        sort(data.begin() + 1, data.end(), [&columnIndex](const vector<string> &a, const vector<string> &b)
+             { return a[columnIndex] < b[columnIndex]; });
+
+        // Write the sorted data back to the CSV file
+        return exportData(fileName, data);
+    }
+
+    int findInCol(int col_pos, string term, string fileName)
+    {
+        csvRow data =  this->importData(fileName);
+        // if (!data.empty() && !data[0].empty())
+        // {
+            for (size_t i = 0; i < data[0].size(); ++i)
+            {
+                if (data[i][col_pos] == term)
+                {
+                    return i;
+                };
+            };    
+        return -1; // row not found
+    }
+    csvDimension findRowIndex(const csvRow &data, const string &columnName)
+    {
+        if (!data.empty() && !data[0].empty())
+        {
+            for (size_t j = 0; j < data.size(); ++j)
+            for (size_t i = 0; i < data[0].size(); ++i)
+            {
+                if (data[j][i] == columnName)
+                {
+        return make_pair(j, i);
+                };
+            };
+            };
+        
+     
+        return make_pair(0, 0);
+    }
+    string at(string file, int col_pos, int row_pos)
+    {
+        csvRow data = importData(file);
+        return data[row_pos][col_pos];
+    }
+    size_t findColumnIndex(const csvRow &data, const string &columnName)
+    {
+        if (!data.empty() && !data[0].empty())
+        {
+            for (size_t i = 0; i < data[0].size(); ++i)
+            {
+                if (data[0][i] == columnName)
+                {
+                    return i;
+                }
+            }
+        }
+        return string::npos; // Column not found
+    }
+};
+CSVLibrary csv;

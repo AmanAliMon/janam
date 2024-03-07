@@ -1,0 +1,22 @@
+#include <functional>
+template <typename caseHer>
+struct situationS{
+    caseHer m;
+    function<void()> n;
+};
+template <typename caseHis>
+struct situationS<caseHis> situation(caseHis data, function<void()> fn = [](){cout << "";}){
+    struct situationS<caseHis> a;
+    a.m =data;
+    a.n =fn;
+    return a;
+}
+template <typename caseT>
+void caseMatch(caseT data, vector<situationS<caseT>> deals, function<void()> defaultFn){
+    for(const situationS<caseT> &deal : deals){
+        if(deal.m == data){
+            (deal.n)();
+        }
+    }
+    defaultFn();
+};

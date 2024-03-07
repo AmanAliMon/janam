@@ -1,0 +1,83 @@
+#include <iostream>
+#include <stdlib.h>
+#include <unistd.h>
+#include <dirent.h>
+#include <sys/types.h>
+typedef FILE *f_src;
+typedef string f_cnt;
+typedef vector<string> dir_f;
+class fsys
+{
+public:
+    int writeToFile(string address,string data, string permission = "w")
+    {
+        try
+        {
+            f_src resource = fopen(address.c_str(), permission.c_str());
+            for (size_t i = 0; i < data.length(); i++)
+            {
+                putc((char)data[i], resource);
+            }
+            fclose(resource);
+            return 0;
+        }
+        catch (const std::exception &e)
+        {
+            return 1;
+        }
+    }
+    f_src cResource(string name, string permission)
+    {
+        f_src resource = fopen(name.c_str(), permission.c_str());
+        return resource;
+    }
+    int newDir(const char *dirName)
+    {
+        return mkdir(dirName);
+    }
+    string getData(const char* resource)
+    {
+        FILE* resourceF = fopen(resource, "r");
+        string chs;
+        char ch;
+        while ((ch = getc(resourceF)) != -1)
+        {
+            chs = chs + ch;
+        }
+        fclose(resourceF);
+        return chs;
+    }
+    int appendFile(const char* to_append, const char* append_into){
+        try{string data = this->getData(to_append);
+        this->writeToFile(append_into,data);
+        return 0;}catch(std::exception &e){runtime_error(e.what());return 1;}
+    }
+    int renamePath(const char* oldName,const char * newName)
+    {
+        return rename(oldName,newName);
+    }
+    bool exists(const char* address)
+    {
+        return (access(address,0) != -1);
+    }
+    int removePath(const char* address)
+    {
+        return remove(address);
+    }
+    vector<string> readDir(const char *dir_name)
+    {
+        struct dirent *entry;
+        vector<string> response;
+        DIR *dp = opendir(dir_name);
+        if (dp == NULL)
+        {
+            runtime_error("error at readDir");
+        }
+        while ((entry = readdir(dp)))
+        {
+            response.push_back(entry->d_name);
+        }
+        return response;
+    };
+};
+fsys fs;

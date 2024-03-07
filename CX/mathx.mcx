@@ -1,0 +1,147 @@
+// .insert(result.data.end(), other.data.begin(), other.data.end())
+#include "Math.mcx"
+#include <unordered_set>
+typedef vector<int> series;
+typedef vector<float> fseries;
+class mathx
+{
+  public:
+  int anti_factorial(size_t _l)
+  {
+    for (int index = 1; index <= _l; index++)
+    {
+      _l = _l / index;
+      if (_l == 1)
+      {
+        return index;
+      }
+      if (_l <= 1)
+      {
+        runtime_error("Impossible or need more significant figures");
+      }
+    }
+  }
+  series fibonacci(int limit)
+  {
+    series fibonacciSeries;
+    fibonacciSeries.push_back(0);
+    fibonacciSeries.push_back(1);
+    fibonacciSeries.push_back(1);
+    for(int i = 2; i < limit; i++)
+    {
+      // cout << i  <<" & "<<fibonacciSeries[i] << " => " << (fibonacciSeries[i] + fibonacciSeries[i-1]);
+      fibonacciSeries.push_back(fibonacciSeries[i] + fibonacciSeries[i-1]);
+    }
+     return fibonacciSeries;
+  }
+  fseries geometrical(float a, float r , float n , bool returnSeries=true){
+    if(returnSeries)
+    {
+    
+        fseries geometricalSeries;
+        geometricalSeries.push_back(a);
+        for(int i = 1; i <= n; i++)
+        {
+          float powed = r;
+          for(int j = 2; j < i; j++)
+          {
+            powed *= r;
+          }
+          float h = a * powed;
+          geometricalSeries.push_back(h);
+        }
+        cout << "\n";
+        return geometricalSeries;     
+    }
+      fseries geometricalSeries;
+      float powed = r;
+      for(int j = 2; j < n; j++)
+      {
+          powed *= r;
+      }
+      float h = a * powed;
+      geometricalSeries.push_back(h);
+      return geometricalSeries;
+  }
+  fseries arithmetic(float a, float d, float n, bool returnSeries=true){
+    if(returnSeries){fseries arithmeticSeries;
+    for(int i = 1; i <= n; i++)
+    {
+      float h  = a + (i-1)*d;
+      arithmeticSeries.push_back(h);
+    }
+    return arithmeticSeries;
+  }
+  fseries arithmeticSeries;
+      float h  = a + (n-1)*d;
+      arithmeticSeries.push_back(h);
+      return arithmeticSeries;
+  }
+  series triangular(int n, bool returnSeries = true){
+    if(!returnSeries)
+    {
+    series triangularSeries;
+      int h = (n * (n + 1))/2;
+      triangularSeries.push_back(h);
+    return triangularSeries;
+    }
+    
+    series triangularSeries;
+    for(int i = 1; i < n; i++)
+    {
+      int h = (i * (i + 1))/2;
+      triangularSeries.push_back(h);
+    }
+    return triangularSeries;
+  }
+  vector<series> pascal(int n, bool returnSeries = true, bool lastSumTerm = false){
+    if(returnSeries){
+
+    vector<series> pascalSeries;
+for(int super = 0; super <= n; super++)
+{
+    series pascalSubSeries;
+    for(int r = 0; r <= super; r++)
+    {
+      int h = Math.factorial(super) / (Math.factorial(r) * Math.factorial(super - r));
+      pascalSubSeries.push_back(h);
+    }
+    
+    
+    if(lastSumTerm){
+      int sigma = 0;
+      for(const int &y : pascalSubSeries)
+      {
+        sigma += y;
+      }
+      pascalSubSeries.push_back(sigma);
+    }
+    pascalSeries.push_back(pascalSubSeries);
+
+
+
+    }
+    return pascalSeries;
+}
+    vector<series> pascalSeries;
+    series pascalSubSeries;
+    for(int r = 0; r <= n; r++)
+    {
+      int h = Math.factorial(n) / (Math.factorial(r) * Math.factorial(n - r));
+      pascalSubSeries.push_back(h);
+    }
+    
+    
+    if(lastSumTerm){
+      int sigma = 0;
+      for(const int &y : pascalSubSeries)
+      {
+        sigma += y;
+      }
+      pascalSubSeries.push_back(sigma);
+    }
+    pascalSeries.push_back(pascalSubSeries);
+    return pascalSeries;
+  }
+};
+mathx Mathx;

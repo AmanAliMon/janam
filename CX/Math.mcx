@@ -1,0 +1,172 @@
+using namespace std;
+class Math {
+public:
+    float PI = 3.141592653589793;
+    float E = 2.718281828459045;
+    float LN2 = 0.6931471805599453;
+    float LN10 = 2.302585092994046;
+    float LOG2E = 1.4426950408889634;
+    float LOG10E = 0.4342944819032518;
+    float SQRT1_2 = 0.7071067811865476;
+    float SQRT2 = 1.4142135623730951;
+
+public:
+    double abs(double x) {
+        return abs(x);
+    }
+
+    double acos(double x) {
+        return acos(x);
+    }
+
+    double acosh(double x) {
+        return acosh(x);
+    }
+
+    double asin(double x) {
+        return asin(x);
+    }
+
+    double asinh(double x) {
+        return asinh(x);
+    }
+
+    double atan(double x) {
+        return atan(x);
+    }
+
+    double atan2(double y, double x) {
+        return atan2(y, x);
+    }
+
+    double atanh(double x) {
+        return atanh(x);
+    }
+
+    double cbrt(double x) {
+        return cbrt(x);
+    }
+
+    double ceil(double x) {
+        return ceil(x);
+    }
+
+    int clz32(int x) {
+        return __builtin_clz(x);  // GCC-specific
+    }
+
+    double cos(double x) {
+        return cos(x);
+    }
+
+    double cosh(double x) {
+        return cosh(x);
+    }
+
+    double exp(double x) {
+        return (pow(2.718281828459045,x));
+    }
+
+    double expm1(double x) {
+        return expm1(x);
+    }
+
+    double floor(double x) {
+        return floor(x);
+    }
+
+    float fround(double x) {
+        return static_cast<float>(x);  // Converting to float
+    }
+
+    double hypot(double x, double y) {
+        return hypot(x, y);
+    }
+
+    int imul(int a, int b) {
+        return a * b;
+    }
+
+    double log(double x) {
+        return log(x);
+    }
+
+    double log1p(double x) {
+        return log1p(x);
+    }
+
+    double log2(double x) {
+        return log2(x);
+    }
+
+    double log10(double x) {
+        return log10(x);
+    }
+
+    double max(double a, double b) {
+        return max(a, b);
+    }
+
+    double min(double a, double b) {
+        return min(a, b);
+    }
+
+    double pow(double base, double exponent) {
+        return pow(base, exponent);
+    }
+
+    double random() {
+        return static_cast<double>(rand()) / RAND_MAX;
+    }
+
+    double round(double x) {
+        return round(x);
+    }
+
+    int sign(double x) {
+        return (x > 0) - (x < 0);
+    }
+
+    double sin(double x) {
+        return sin(x);
+    }
+
+    double sinh(double x) {
+        return sinh(x);
+    }
+
+    double sqrt(double x) {
+        return sqrt(x);
+    }
+
+    double tan(double x) {
+        return tan(x);
+    }
+
+    double tanh(double x) {
+        return tanh(x);
+    }
+
+    double trunc(double x) {
+        return trunc(x);
+    }
+    size_t factorial(int value){
+        if (value != std::abs(value)) {
+            return -1;
+        }
+        int x = std::abs(value);
+        size_t _one = 1l;
+        for (int _l = x; _l >= 1; _l--) {
+        _one = _one * _l;
+        }
+        return _one;
+    }
+    // limit 64  ^
+    int nCr(int n, int r){
+        return factorial(n) / (factorial(r) * factorial((n - r)));
+    }
+    int nPr(int n, int r){
+        return factorial(n) / factorial(n - r);
+    }
+};
+Math Math;

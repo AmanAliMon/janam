@@ -1,0 +1,32 @@
+#ifndef __SENSE_H__
+#define __SENSE_H__
+
+class senseStream {
+public:
+    senseStream operator<<(bool parameter){parameter ? printf("true") : printf("false");return senseStream();}
+    senseStream operator<<(std::string parameter){printf(parameter.c_str());return senseStream();}
+    senseStream operator<<(int parameter){printf("%i", parameter);return senseStream();}
+        senseStream operator<<(long parameter){printf("%d", parameter);return senseStream();}
+    senseStream operator<<(int * parameter){printf("%u", parameter);return senseStream();}
+    senseStream operator<<(float parameter){printf("%f", parameter);return senseStream();}
+    senseStream operator<<(size_t parameter){printf("%d", parameter);return senseStream();}
+    senseStream operator<<(double parameter){printf("%d", parameter);return senseStream();}
+    senseStream operator<<(unsigned int parameter){printf("%u", parameter);return senseStream();}
+    // senseStream operator<<(const char *parameter){printf(parameter);return senseStream();}
+    senseStream operator<<(char parameter){printf("%c", parameter);return senseStream();}
+    senseStream operator<<(const char *parameter){printf(parameter);return senseStream();}
+    senseStream operator<<(JString parameter){printf(parameter.c_str());return senseStream();}
+    senseStream operator<<(JNumber parameter){printf(parameter.toString().c_str());return senseStream();}
+    // senseStream operator<<(JNumber parameter){printf("%d", parameter.parseDouble);return senseStream();}
+    senseStream operator>>(string &parameter){cin>>parameter;return senseStream();}
+    senseStream operator>>(int &parameter){cin>>parameter;return senseStream();}
+    senseStream operator>>(float &parameter){cin>>parameter;return senseStream();}
+    senseStream operator>>(unsigned int &parameter){cin>>parameter;return senseStream();}
+    senseStream operator>>(double &parameter){cin>>parameter;return senseStream();}
+    // senseStream operator>>(const char* &parameter){cin>>parameter;return senseStream();}
+    senseStream operator>>(char &parameter){cin>>parameter;return senseStream();}
+    // senseStream operator>>(JString &parameter){cin>>parameter;return senseStream();}
+    // senseStream operator>>(JNumber &parameter){cin>>parameter;return senseStream();}
+};
+senseStream sense = senseStream();
+#endif // __SENSE_H__

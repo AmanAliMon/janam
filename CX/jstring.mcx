@@ -1,0 +1,281 @@
+#ifndef __JSTRING_H__
+#define __JSTRING_H__
+using namespace std;
+class JString
+{
+private:
+    string data;
+public:
+    JString() {}
+    JString(double str) : data(std::to_string(str)) {}
+    JString(char *str) : data(str) {}
+    JString(const char str[]) : data(str) {}
+    JString(const string &str) : data(str) {}
+    JString(const JString &other) : data(other.data) {}
+
+    bool operator==(const JString &other){
+        return (data  == other.data);
+    }
+    bool operator!=(const JString &other){
+        return (data  != other.data);
+    }
+    bool operator==(const string &other){
+        return (data  == other);
+    }
+    bool operator!=(const string &other){
+        return (data  != other);
+    }
+    JString operator=(const char other[]){if (this->data != string(other)){data = string(other);}return *this;}
+    JString &operator=(const string &other){if (this->data != other){data = other;}return *this;}
+    JString &operator=(const JString &other){if (this != &other){data = other.data;}return *this;}
+    JString &operator+=(const JString &other)
+    {
+        data = data + other.data;
+        return *this;
+    }
+    JString &operator+=(const char other[])
+    {
+        data = data + string(other);
+        return *this;
+    }
+    JString &operator+=(const string &other)
+    {
+        data = data + other;
+        return *this;
+    }
+    JString repeat(size_t count)
+    {
+        string result;
+        for (size_t i = 0; i < count; i++)
+        {
+            result += data;
+        }
+        data = result;
+        return *this;
+    }
+    JString operator*(size_t count)
+    {
+        string result;
+        for (size_t i = 0; i < count - 1; i++)
+        {
+            result += data;
+        }
+        return result;
+    }
+
+//  friend JString operator,(const JString &other) const
+//     {
+//         return JString(data + other.data);
+//     }
+
+    JString operator+(const char other[]) const
+    {
+        return JString(data + string(other));
+    }
+    JString operator+(const string other) const
+    {
+        return JString(data + other);
+    }
+    JString operator+(const JString &other) const
+    {
+        return JString(data + other.data);
+    }
+
+    const char *c_str() const
+    {
+        return data.c_str();
+    }
+
+    int codePointAt(size_t index)
+    {
+        if (index >= 0 && index < data.length())
+        {
+            unsigned char currentByte = data[index];
+
+            if (currentByte <= 0x7F)
+            {
+                return currentByte;
+            }
+            else if (currentByte >= 0xC0 && currentByte <= 0xDF && index + 1 < data.length())
+            {
+                unsigned char nextByte = data[index + 1];
+                return ((currentByte & 0x1F) << 6) | (nextByte & 0x3F);
+            }
+            else if (currentByte >= 0xE0 && currentByte <= 0xEF && index + 2 < data.length())
+            {
+                unsigned char nextByte1 = data[index + 1];
+                unsigned char nextByte2 = data[index + 2];
+                return ((currentByte & 0x0F) << 12) | ((nextByte1 & 0x3F) << 6) | (nextByte2 & 0x3F);
+            }
+        }
+        return -1;
+    }
+
+    JString concat(const string &str)
+    {
+        return JString(data + str);
+    }
+
+    bool endsWith(const char substr[])
+    {
+        if (data.length() >= string(substr).length())
+        {
+            return data.compare(data.length() - string(substr).length(), string(substr).length(), string(substr)) == 0;
+        }
+        return false;
+    }
+
+    bool includes(const char substr[])
+    {
+        return (data.find(string(substr)) != string::npos);
+    }
+
+    int indexOf(const char substr[])
+    {
+        return data.find(string(substr));
+    }
+
+    int lastIndexOf(const char substr[])
+    {
+        size_t found = data.rfind(string(substr));
+        return (found != string::npos) ? static_cast<int>(found) : -1;
+    }
+
+    int localeCompare(const string &str)
+    {
+        return data.compare(str);
+    }
+
+//    JString match(const string &pattern)
+  //  {
+    //    size_t found = data.find(pattern);
+        // if (found != string::npos)
+        // {
+      //      return JString(data.substr(found, pattern.length()));
+        // }
+        // else
+        // {
+        //     return JString("");
+        // }
+    //}
+
+    JString replace(const string &oldStr, const string &newStr)
+    {
+        size_t pos = data.find(oldStr);
+        if (pos != string::npos)
+        {
+            data.replace(pos, oldStr.length(), newStr);
+        }
+        return *this;
+    }
+
+    JString replaceAll(const string &pattern, const string &replacement)
+    {
+        size_t pos = 0;
+        while ((pos = data.find(pattern, pos)) != string::npos)
+        {
+            data.replace(pos, pattern.length(), replacement);
+            pos += replacement.length();
+        }
+        return *this;
+    }
+
+    int search(const string &pattern)
+    {
+        return data.find(pattern);
+    }
+
+    JString slice(size_t start, size_t end = string::npos)
+    {
+        if (end == string::npos || end > data.length())
+        {
+            end = data.length();
+        }
+        data = data.substr(start, end - start);
+        return *this;
+    }
+
+    /*vector<JString> split(char delimiter)
+    {
+        vector<JString> result;
+        size_t start = 0, end = 0;
+        while ((end = data.find(delimiter, start)) != string::npos)
+        {
+            result.push_back(data.substr(start, end - start));
+            start = end + 1;
+        }
+        result.push_back(data.substr(start));
+        return result;
+    }*/
+
+    bool startsWith(const string &prefix)
+    {
+        if (data.length() >= prefix.length())
+        {
+            return data.compare(0, prefix.length(), prefix) == 0;
+        }
+        return false;
+    }
+
+    /*    JString toLocaleLowerCase()
+        {
+            std::transform(data.begin(), data.end(), data.begin(), tolower);
+            return *this;
+        }
+
+        JString toLocaleUpperCase()
+        {
+            transform(data.begin(), data.end(), data.begin(), toupper);
+            return *this;
+        }
+
+        JString toLowerCase()
+        {
+            transform(data.begin(), data.end(), data.begin(), tolower);
+            return *this;
+        }
+
+        JString toString()
+        {
+            return data;
+        }
+
+        JString toUpperCase()
+        {
+            transform(data.begin(), data.end(), data.begin(), toupper);
+            return *this;
+        }
+    */
+    JString trim()
+    {
+        size_t start = data.find_first_not_of(" \t\r\n");
+        size_t end = data.find_last_not_of(" \t\r\n");
+
+        if (start != std::string::npos && end != std::string::npos)
+        {
+            data = data.substr(start, end - start + 1);
+        }
+        else
+        {
+            data.clear();
+        }
+
+        return *this;
+    }
+    int length()
+    {
+
+        return data.length();
+    }
+
+    JString at(size_t index){if (index >= 0 && index < data.length()){return JString(string(1, data[index]));}return JString("");}
+    char charAt(size_t index){if (index >= 0 && index < data.length()){return  data[index];}return '\0';}
+    int charCodeAt(int index){return int(JString(data).charAt(index));}
+    int parseInt(){return stoi(data);}
+    float parseFloat(){return stof(data);}
+    double parseDouble(){return stod(data);}
+    long parseLong(){return stol(data);}
+    long long parseLonger(){return stoll(data);}
+    long double parseTwiceLong(){return stold(data);}
+    operator string() const{return data;}};
+#endif // __JSTRING_H__

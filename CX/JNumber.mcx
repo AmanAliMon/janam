@@ -1,0 +1,128 @@
+#ifndef __JNUMBER_H__
+#define __JNUMBER_H__
+using namespace std;
+class JNumber
+{
+public:
+    double value;
+
+public:
+    JNumber(double val) : value(val) {}
+    JNumber(int val) : value(val) {}
+    JNumber(float val) : value(val) {}
+
+    JNumber operator+(const JNumber &other) const
+    {
+        return JNumber(value + other.value);
+    }
+    JNumber operator-(const JNumber &other) const
+    {
+        return JNumber(value - other.value);
+    }
+
+    JNumber operator*(const JNumber &other) const
+    {
+        return JNumber(value * other.value);
+    }
+    JNumber operator>(const JNumber &other) const
+    {
+        return JNumber(value * other.value);
+    }
+
+    JNumber operator/(const JNumber &other) const
+    {
+        if (other.value == 0)
+        {
+            std::cerr << "Error: Division by zero , Infinity is not defined in this version" << std::endl;
+            return JNumber(0);
+        }
+        return JNumber(value / other.value);
+    }
+    /*//*/bool operator==(const JNumber &other) const
+    {
+        return value == other.value;
+    }
+    bool operator>=(const JNumber &other) const
+    {
+        return value >= other.value;
+    }
+    bool operator!=(const JNumber &other) const
+    {
+        return value != other.value;
+    }
+    bool operator<(const JNumber &other) const
+    {
+        return value < other.value;
+    }
+    bool operator%(const JNumber &other)
+    {
+        double d = value - other.value;
+        double frac = d/value;
+        return (std::abs(frac) < 0.1);
+    }
+/*//*/
+    JNumber operator[](const JNumber &other) const
+    {
+        return JNumber(std::pow(value, 1 / other.value));
+    }
+    JNumber abs()
+    {
+        return JNumber(std::abs(value));
+    }
+    JNumber operator^(const JNumber &other) const
+    {
+        return JNumber(std::pow(value, other.value));
+    }
+
+    JNumber sqrt() const
+    {
+        if (value < 0)
+        {
+            runtime_error("Cannot calculate square root of a negative number use CX suggested alternates complex::csqrt() ");
+            return JNumber(0);
+        }
+        return JNumber(std::sqrt(value));
+    }
+    int parseInt() const
+    {
+        return static_cast<int>(value);
+    }
+    float parseFloat() const
+    {
+        return static_cast<float>(value);
+    }
+    double parseDouble() const
+    {
+        return value;
+    }
+    JString toString()
+    {
+        return JString(value);
+    }
+    /*    Complex csqrt() const {
+            if (value >= 0) {
+                return Complex(std::sqrt(value));
+            }
+            if (value < 0) {
+                return Complex(0,std::sqrt(abs(value)));
+            }
+        }
+    */
+    JNumber nRoot(int rootValue) const
+    {
+        if (value < 0 && rootValue % 2 == 0)
+        {
+            std::runtime_error("Error: Cannot calculate even root of a negative number (Use Complex Library to implement so, to use functions)");
+            return JNumber(0);
+        }
+        return JNumber(std::pow(value, 1.0 / rootValue));
+    }
+
+    JNumber pow(int exponent) const
+    {
+        return JNumber(std::pow(value, exponent));
+    }
+// toExponential()
+// toFixed()
+};
+#endif // __JNUMBER_H__

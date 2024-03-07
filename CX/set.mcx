@@ -1,0 +1,117 @@
+#include <stdlib.h>
+#include <iostream>
+#include <set>
+    class Set
+    {
+    public:
+        std::set<int> elements;
+    public:
+    
+        // Constructor
+        Set() {}
+        Set(std::set<int> somesortofset): elements(somesortofset) {}
+        // Destructor
+        ~Set() {}
+        // Add an element to the set
+        template<typename... Args>
+        Set add(Args... values) {
+            int dummy[] = { 0, (elements.insert(values), 0)... };
+            static_cast<void>(dummy); // Avoids unused variable warning
+            return *this;
+        }
+        Set remove(int value)
+        {
+            elements.erase(value);
+            return *this;
+        }
+
+        bool contains(int value)
+        {
+            return elements.count(value) > 0;
+        }
+
+        size_t size()
+        {
+            return elements.size();
+        }
+
+        void clear()
+        {
+            elements.clear();
+        }
+
+        void printAll()
+        {
+            for (const auto &element : elements)
+            {
+                std::cout << element << " ";
+            }
+            std::cout << std::endl;
+        }
+
+        // Union operation with another set
+        Set Union(const Set &otherSet)
+        {
+            Set result;
+            for (const auto &element : elements)
+            {
+                result.add(element);
+            }
+            for (const auto &element : otherSet.elements)
+            {
+                result.add(element);
+            }
+            return result;
+        }
+
+        // Intersection operation with another set
+        Set Intersection(const Set &otherSet)
+        {
+            Set result;
+            for (const auto &element : elements)
+            {
+                if (Set(otherSet).contains(element))
+                {
+                    result.add(element);
+                }
+            }
+            return result;
+        }
+        Set operator[](const Set &otherSet)
+        {
+            Set result;
+            for (const auto &element : elements)
+            {
+                if (Set(otherSet).contains(element))
+                {
+                    result.add(element);
+                }
+            }
+            return result;
+        }
+        Set operator+(const Set &other) const
+        {
+            Set result;
+            for (const auto &element : elements)
+            {
+                result.add(element);
+            }
+            for (const auto &element : other.elements)
+            {
+                result.add(element);
+            }
+            return result;
+        }
+        Set operator-(const Set &other) const
+        {
+            Set result = Set(elements);
+            for (const auto &element : elements)
+            {
+                if (Set(other).contains(element))
+                {
+                    result.remove(element);
+                }
+            }
+            return result;
+        }
+    };

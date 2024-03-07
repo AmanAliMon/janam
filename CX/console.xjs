@@ -1,0 +1,32 @@
+#ifndef __Console_H__
+#define __Console_H__
+
+class Console {
+public:
+    // void log(bool parameter){parameter ? printf("true") : printf("false");}
+    void log(std::string parameter){printf("%s",parameter.c_str());}
+    /*void log(int parameter){printf("%i", parameter);}
+        void log(long parameter){printf("%d", parameter);}
+    void log(int * parameter){printf("%u", parameter);}
+    void log(float parameter){printf("%f", parameter);}
+    void log(size_t parameter){printf("%d", parameter);}
+    void log(double parameter){printf("%d", parameter);}
+    void log(unsigned int parameter){printf("%u", parameter);}
+    void log(const char *parameter){printf(parameter);}
+    void log(char parameter){printf("%c", parameter);}
+    void log(const char *parameter){printf(parameter);}
+    void log(JString parameter){printf(parameter.c_str());}
+    void log(JNumber parameter){printf(parameter.toString().c_str());}
+    // void log(JNumber parameter){printf("%d", parameter.parseDouble);}
+    void in(string &parameter){cin>>parameter;}
+    */int in(string parameter){cout<<parameter.c_str();int l;cin>>l;return l;}
+    /*void in(float &parameter){cin>>parameter;}
+    void in(unsigned int &parameter){cin>>parameter;}
+    void in(double &parameter){cin>>parameter;}
+    // void in(const char* &parameter){cin>>parameter;}
+    void in(char &parameter){cin>>parameter;}
+    // void in(JString &parameter){cin>>parameter;}
+    // void in(JNumber &parameter){cin>>parameter;}*/
+};
+Console console = Console();
+#endif // __Console_H__

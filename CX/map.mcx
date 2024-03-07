@@ -1,0 +1,43 @@
+#include <map>
+
+template <typename KeyType, typename ValueType>
+class map {
+private:
+    std::map<KeyType, ValueType> data;
+public:
+    // Insert a key-value pair into the map
+    void set(const KeyType& key, const ValueType& value) {
+        data[key] = value;
+    }
+    // Retrieve the value associated with a key
+    ValueType get(const KeyType& key) {
+        auto it = data.find(key);
+        if (it != data.end()) {
+            return it->second;
+        }
+        throw std::out_of_range("Key not found");
+    }
+
+    // Check if a key exists in the map
+    bool has(const KeyType& key) {
+        return data.find(key) != data.end();
+    }
+
+    // Remove a key and its associated value from the map
+    void deleteKey(const KeyType& key) {
+        auto it = data.find(key);
+        if (it != data.end()) {
+            data.erase(it);
+        }
+    }
+
+    // Get the size of the map
+    size_t size() {
+        return data.size();
+    }
+
+    // Clear all elements from the map
+    void clear() {
+        data.clear();
+    }
+};
