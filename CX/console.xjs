@@ -5,8 +5,8 @@ class Console {
 public:
     // void log(bool parameter){parameter ? printf("true") : printf("false");}
     void log(std::string parameter){printf("%s",parameter.c_str());}
-    /*void log(int parameter){printf("%i", parameter);}
-        void log(long parameter){printf("%d", parameter);}
+    void log(int parameter){printf("%i", parameter);}
+    /*    void log(long parameter){printf("%d", parameter);}
     void log(int * parameter){printf("%u", parameter);}
     void log(float parameter){printf("%f", parameter);}
     void log(size_t parameter){printf("%d", parameter);}

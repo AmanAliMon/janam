@@ -1,32 +1,26 @@
-void parse2cpp(vector<string> tokens,ofstream& outfile){
-for(size_t i = 0; i < tokens.size(); i++)
-{
-    string token  = tokens[i];
-        if(token == "let" || token == "var"){
-            if(tokens[i+2] == ":"){
-                outfile<<( tokens[i+3] + " " + tokens[i+1]);
-                i = i+3;
-             }
-            else if(tokens[i+3] == "(" && tokens[i+2]=="="){
-                int k = afterParams(tokens,i+3);
-                cout << tokens[k] << k;
-                if(tokens[k+1] == "=" && tokens[k+2] == ">" ){
-                    outfile<<"auto " + tokens[i+1] + " = [&](";
-                    for(int q = i+4; q <= k; q++)
-                    {
-                        cout<<"\nadded # param\n";
-                        outfile<<tokens[q];
+void parse2cpp(std::vector<std::string> tokens, std::ofstream& outfile) {
+    for (size_t i = 0; i < tokens.size(); i++) {
+        std::string token = tokens[i];
+        if (token == "let" || token == "var") {
+            if (i + 3 < tokens.size() && tokens[i + 2] == ":") {
+                outfile << (tokens[i + 3] + " " + tokens[i + 1]);
+                i = i + 3;
+            } else if (i + 4 < tokens.size() && tokens[i + 3] == "(" && tokens[i + 2] == "=") {
+                int k = afterParams(tokens, i + 3);
+                if (k != -1 && k + 3 < tokens.size() && tokens[k + 1] == "=" && tokens[k + 2] == ">") {
+                    outfile << "auto " + tokens[i + 1] + " = [&](";
+                    for (int q = i + 4; q <= k; q++) {
+                        outfile << tokens[q];
                     }
-                    cout<<endl<<tokens[k+3];
-                    i = k+2;
-                    cout<<endl<<i<< " @ k : "<<k ;
-                    //    auto stringReturningLambda = []() -> std::string {
+                    i = k + 2;
                 }
             }
-        }
-        //Last else
-        else{
-            outfile<<token;
+        } else {
+            outfile << token;
+            // Add space between alphanumeric tokens
+            if (i + 1 < tokens.size() && std::isalnum(token.back()) && std::isalnum(tokens[i + 1].front())) {
+                outfile << " ";
+            }
         }
     }
 }

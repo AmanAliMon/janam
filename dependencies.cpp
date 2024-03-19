@@ -5,4 +5,3 @@
 #include <vector>
 #include <cctype>
 #include <cstdlib>
-

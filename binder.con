@@ -3,4 +3,6 @@
 #include<string>
 #include<cstring>
 using namespace std;
+#include <random>
+#include"CX/Math.mcx"
 #include"CX/console.xjs"

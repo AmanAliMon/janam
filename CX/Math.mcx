@@ -115,9 +115,16 @@ public:
         return pow(base, exponent);
     }
 
-    double random() {
-        return static_cast<double>(rand()) / RAND_MAX;
-    }
+float random(float min=0, float max=100) {
+    // Use std::random_device to obtain a seed for the random number engine
+    std::random_device rd;
+    // Use std::mt19937 as the random number engine
+    std::mt19937 gen(rd());
+    // Use std::uniform_real_distribution to generate floats within [min, max]
+    std::uniform_real_distribution<float> dis(min, max);
+    // Generate and return a random float
+    return dis(gen);
+}
 
     double round(double x) {
         return round(x);
